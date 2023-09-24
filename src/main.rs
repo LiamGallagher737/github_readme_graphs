@@ -56,7 +56,7 @@ async fn fetch_github<T: DeserializeOwned>(
     app: &App,
 ) -> Result<T, (StatusCode, &'static str)> {
     const ISE: StatusCode = StatusCode::INTERNAL_SERVER_ERROR;
-    let data = app
+    let response = app
         .http_client
         .get(&url)
         .header("Authorization", app.secrets.github_token.clone())
@@ -64,7 +64,15 @@ async fn fetch_github<T: DeserializeOwned>(
         .header("User-Agent", "GitHub README Graphs")
         .send()
         .await
-        .map_err(|_| (ISE, "Failed to get GitHub data"))?
+        .map_err(|_| (ISE, "Failed to fetch GitHub data"))?;
+
+    match response.status() {
+        StatusCode::ACCEPTED => return Err((StatusCode::ACCEPTED, "Data is being generated")),
+        StatusCode::NOT_FOUND => return Err((StatusCode::NOT_FOUND, "Repo not found")),
+        _ => {}
+    }
+
+    let data = response
         .json::<T>()
         .await
         .map_err(|_| (ISE, "Failed to parse GitHub data"))?;
