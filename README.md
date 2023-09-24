@@ -12,7 +12,7 @@ Some cool graphs to visualise stats about your profile and repos
 
 ## Weekly Commit Count
 
-[![Weekly Commit Count](https://github-readme-graphs.shuttleapp.rs/repo/rust-lang/rust/weekly-commit-count)](https://github.com/LiamGallagher737/github_readme_graphs)
+[![Weekly Commit Count](https://github-readme-graphs.shuttleapp.rs/repo/rust-lang/rust/weekly-commit-count?title=Weekly%20Commit%20Count%20(rust-lang/rust))](https://github.com/LiamGallagher737/github_readme_graphs)
 
 ```md
 [![Weekly Commit Count](https://github-readme-graphs.shuttleapp.rs/repo/{USER}/{REPO}/weekly-commit-count)](https://github.com/LiamGallagher737/github_readme_graphs)
