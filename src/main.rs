@@ -1,7 +1,6 @@
 use crate::endpoints::weekly_commit_count::weekly_commit_count;
 use axum::{routing::get, Router};
-use reqwest::{Client, StatusCode};
-use serde::de::DeserializeOwned;
+use reqwest::Client;
 use shuttle_secrets::SecretStore;
 use tera::Tera;
 
@@ -31,7 +30,6 @@ async fn axum(#[shuttle_secrets::Secrets] secret_store: SecretStore) -> shuttle_
     let http_client = Client::new();
 
     let mut tera = Tera::default();
-    // tera.register_filter("pretty", graph::pretty);
     tera.add_raw_template("graph", include_str!("graph.tera.svg"))
         .expect("Failed to add graph template");
 
@@ -49,32 +47,4 @@ async fn axum(#[shuttle_secrets::Secrets] secret_store: SecretStore) -> shuttle_
         .with_state(app);
 
     Ok(router.into())
-}
-
-async fn fetch_github<T: DeserializeOwned>(
-    url: String,
-    app: &App,
-) -> Result<T, (StatusCode, &'static str)> {
-    const ISE: StatusCode = StatusCode::INTERNAL_SERVER_ERROR;
-    let response = app
-        .http_client
-        .get(&url)
-        .header("Authorization", app.secrets.github_token.clone())
-        .header("X-GitHub-Api-Version", "2022-11-28")
-        .header("User-Agent", "GitHub README Graphs")
-        .send()
-        .await
-        .map_err(|_| (ISE, "Failed to fetch GitHub data"))?;
-
-    match response.status() {
-        StatusCode::ACCEPTED => return Err((StatusCode::ACCEPTED, "Data is being generated")),
-        StatusCode::NOT_FOUND => return Err((StatusCode::NOT_FOUND, "Repo not found")),
-        _ => {}
-    }
-
-    let data = response
-        .json::<T>()
-        .await
-        .map_err(|_| (ISE, "Failed to parse GitHub data"))?;
-    Ok(data)
 }

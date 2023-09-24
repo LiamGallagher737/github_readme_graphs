@@ -1,5 +1,6 @@
+use super::fetch_github;
 use crate::graph::{Graph, Vec2};
-use crate::{fetch_github, App};
+use crate::App;
 use axum::extract::{Path, Query, State};
 use axum::http::{header, StatusCode};
 use axum::response::IntoResponse;
