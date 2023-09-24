@@ -16,6 +16,7 @@ pub struct Parameters {
     width: Option<usize>,
     height: Option<usize>,
     title: Option<String>,
+    color: Option<String>,
 }
 
 pub async fn weekly_commit_count(
@@ -31,15 +32,17 @@ pub async fn weekly_commit_count(
         .clone()
         .unwrap_or("Weekly Commit Count".to_string());
 
+    let color = parameters.color.clone().unwrap_or("#99c1f1".to_string());
+
     let graph = Graph {
         title,
+        color,
         points: data
             .all
             .iter()
             .enumerate()
             .map(|(n, v)| Vec2::new(n as f64 + 1.0, *v as f64))
             .collect(),
-        color: "#99c1f1".to_string(),
     };
 
     let width = parameters.width.unwrap_or(800);
