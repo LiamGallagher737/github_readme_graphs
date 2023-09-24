@@ -15,6 +15,7 @@ struct WeeklyCommitCountData {
 pub struct Parameters {
     width: Option<usize>,
     height: Option<usize>,
+    title: Option<String>,
 }
 
 pub async fn weekly_commit_count(
@@ -25,8 +26,10 @@ pub async fn weekly_commit_count(
     let url = format!("https://api.github.com/repos/{user}/{repo}/stats/participation");
     let data = fetch_github::<WeeklyCommitCountData>(url, &app).await?;
 
+    let title = parameters.title.clone().unwrap_or("Weekly Commit Count".to_string());
+
     let graph = Graph {
-        name: "Weekly Commit Count".to_string(),
+        title,
         points: data
             .all
             .iter()

@@ -2,7 +2,7 @@ use tera::{Context, Tera};
 
 #[derive(Clone, Debug)]
 pub struct Graph {
-    pub name: String,
+    pub title: String,
     pub points: Vec<Vec2>,
     pub color: String,
 }
@@ -70,7 +70,7 @@ impl Graph {
             .join("");
 
         context.insert("path", &path);
-        context.insert("name", &self.name);
+        context.insert("name", &self.title);
         context.insert("width", &(width));
         context.insert("height", &(height));
         context.insert("p_left", &p_left);
