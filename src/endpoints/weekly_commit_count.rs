@@ -45,12 +45,9 @@ pub async fn weekly_commit_count(
     let width = parameters.width.unwrap_or(800);
     let height = parameters.height.unwrap_or(400);
 
-    let svg = graph.svg(&app.tera, width, height).map_err(|e| {
-        (StatusCode::INTERNAL_SERVER_ERROR, {
-            dbg!(e);
-            "Failed to create SVG"
-        })
-    })?;
+    let svg = graph
+        .svg(&app.tera, width, height)
+        .map_err(|_| (StatusCode::INTERNAL_SERVER_ERROR, "Failed to create SVG"))?;
 
     Ok((
         StatusCode::OK,
