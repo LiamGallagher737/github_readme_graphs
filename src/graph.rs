@@ -17,7 +17,7 @@ impl Vec2 {
     pub fn new(x: f64, y: f64) -> Self {
         Self { x, y }
     }
-    fn to_svg(&self) -> String {
+    fn to_svg(self) -> String {
         format!("L {} {}", self.x, self.y)
     }
 }
@@ -31,13 +31,13 @@ impl Graph {
             .points
             .iter()
             .map(|val| (val.x - min_x))
-            .fold(0. / 0., f64::max);
-        let min_y = self.points.iter().map(|val| val.y).fold(0. / 0., f64::min);
+            .fold(f64::NAN, f64::max);
+        let min_y = self.points.iter().map(|val| val.y).fold(f64::NAN, f64::min);
         let max_y = self
             .points
             .iter()
             .map(|val| (val.y - min_y))
-            .fold(0. / 0., f64::max);
+            .fold(f64::NAN, f64::max);
 
         let max_label = (max_y + min_y).to_string();
 
@@ -59,7 +59,7 @@ impl Graph {
             .iter()
             .map(|val| Vec2 {
                 x: ((val.x - min_x) / max_x * width) + p_left,
-                y: ((val.y - min_y) / max_y * (height * -1.0)) + p_other as f64 + height as f64,
+                y: ((val.y - min_y) / max_y * (height * -1.0)) + p_other + height,
             })
             .collect();
 
